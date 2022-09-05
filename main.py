@@ -1,51 +1,51 @@
-# 16 characters
-# Uppercase
-# Lowercase
-# Number
-# Special character
-# There needs to be at least 1 for each
-
+from pickle import TRUE
 import string
 import random
-import numpy as np
+import sys
 
-lower = string.ascii_lowercase
-upper = string.ascii_uppercase
-nums = string.digits
-special = string.punctuation
-
-chance = np.random.dirichlet(np.ones(4), size=1)
-print(chance[0, 0]*16)
-print(chance[0, 1]*16)
-print(chance[0, 2]*16)
-print(chance[0, 3]*16)
-print(chance[0, 0]+chance[0, 1]+chance[0, 2]+chance[0, 3])
-
-# how many lowercase
-lca = random.randint(1, 13)
-print('lca', lca)
-if lca == 13:
-    uca = 1
-    nca = 1
-    pca = 1
-else:
-    uca = random.randint(1, 14-lca)
-print('uca', uca)
-if lca + uca == 14:
-    nca = 1
-    pca = 1
-else:
-    nca = random.randint(1, 14-lca-uca)
-pca = 16-lca-uca-nca
+# By default lenght of the password is 16 characters.
 
 
-print('nca', nca)
-print('pca', pca)
+def main(lenght=16):
+    while lenght < 8:
+        print('Password needs to be at least 8 digits')
+        try:
+            lenght = int(input('Type a number, at least 8:\n'))
+        except ValueError as e:
+            print('Input needs to be a number')
+
+    # Create basic variables
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    nums = string.digits
+    special = string.punctuation
+    p_array = []
+
+    # There needs to be at least 1 uppercase, 1 lowercase,
+    # 1 number and 1 special character in our password
+    p_array.append(lower[random.randint(0, len(lower)-1)])
+    p_array.append(upper[random.randint(0, len(upper)-1)])
+    p_array.append(nums[random.randint(0, len(nums)-1)])
+    p_array.append(special[random.randint(0, len(special)-1)])
+
+    # Creating the rest of the password words/digits
+    for i in range(lenght-4):
+        key_choice = random.uniform(0, 1)
+        if key_choice <= 0.25:
+            p_array.append(lower[random.randint(0, len(lower)-1)])
+        elif key_choice <= 0.50:
+            p_array.append(upper[random.randint(0, len(upper)-1)])
+        elif key_choice <= 0.75:
+            p_array.append(nums[random.randint(0, len(nums)-1)])
+        else:
+            p_array.append(special[random.randint(0, len(special)-1)])
+
+    # Now it's time to shuffle the array we created to make sure the sequence will be
+    # different
+    random.shuffle(p_array)
+    password = [''.join(p_array[0:])]
+    print(password[0])
 
 
-# lower[random.randint(0, len(lower)-1)]
-
-# print(len(lower)-1)
-# print(len(upper)-1)
-# print(len(nums)-1)
-# print(len(special)-1)
+if __name__ == '__main__':
+    main()
